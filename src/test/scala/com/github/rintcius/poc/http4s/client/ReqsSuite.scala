@@ -27,10 +27,7 @@ import org.http4s.syntax.header
 
 class AsyncHttpReqsSuite extends ReqsSuite(AsyncHttpClient.resource[IO]())
 
-class BlazeReqsSuite
-    extends ReqsSuite(
-      BlazeClientBuilder[IO](scala.concurrent.ExecutionContext.global).resource
-    )
+class BlazeReqsSuite extends ReqsSuite(BlazeClientBuilder[IO].resource)
 
 class EmberReqsSuite extends ReqsSuite(EmberClientBuilder.default[IO].build)
 
