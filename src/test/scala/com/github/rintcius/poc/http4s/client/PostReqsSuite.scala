@@ -25,22 +25,20 @@ import org.http4s.okhttp.client.OkHttpBuilder
 import org.http4s.syntax.all._
 import org.http4s.syntax.header
 
-class AsyncHttpPostReqsSuite extends PostReqsSuite(AsyncHttpClient.resource[IO]())
+class AsyncHttpPostReqsSuite
+    extends PostReqsSuite(AsyncHttpClient.resource[IO]())
 
 class BlazePostReqsSuite extends PostReqsSuite(BlazeClientBuilder[IO].resource)
 
-class EmberPostReqsSuite extends PostReqsSuite(EmberClientBuilder.default[IO].build)
+class EmberPostReqsSuite
+    extends PostReqsSuite(EmberClientBuilder.default[IO].build)
 
 class JettyPostReqsSuite extends PostReqsSuite(JettyClient.resource[IO]())
 
 class OkHttpPostReqsSuite
-    extends PostReqsSuite(OkHttpBuilder.withDefaultClient[IO].flatMap(_.resource))
-
-case class TestCase(
-    name: String,
-    req: Request[IO],
-    assertion: (Request[IO], Response[IO]) => IO[Unit]
-)
+    extends PostReqsSuite(
+      OkHttpBuilder.withDefaultClient[IO].flatMap(_.resource)
+    )
 
 abstract class PostReqsSuite(
     mkClient: Resource[IO, Client[IO]]
@@ -252,21 +250,4 @@ abstract class PostReqsSuite(
       }
     }
   }
-}
-
-object ReqsAssertions extends Assertions {
-
-  def assertStatusAndResponseContents(
-      status: Status,
-      respBodyPredicate: String => Boolean
-  ): (Request[IO], Response[IO]) => IO[Unit] = { (req, resp) =>
-    resp.as[String].map { respBody =>
-      assert(
-        respBodyPredicate(respBody),
-        s"Unexpected response: '$respBody'"
-      )
-      assertEquals(resp.status, status)
-    }
-  }
-
 }
