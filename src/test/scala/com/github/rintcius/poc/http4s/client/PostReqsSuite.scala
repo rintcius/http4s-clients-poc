@@ -25,16 +25,16 @@ import org.http4s.okhttp.client.OkHttpBuilder
 import org.http4s.syntax.all._
 import org.http4s.syntax.header
 
-class AsyncHttpReqsSuite extends ReqsSuite(AsyncHttpClient.resource[IO]())
+class AsyncHttpPostReqsSuite extends PostReqsSuite(AsyncHttpClient.resource[IO]())
 
-class BlazeReqsSuite extends ReqsSuite(BlazeClientBuilder[IO].resource)
+class BlazePostReqsSuite extends PostReqsSuite(BlazeClientBuilder[IO].resource)
 
-class EmberReqsSuite extends ReqsSuite(EmberClientBuilder.default[IO].build)
+class EmberPostReqsSuite extends PostReqsSuite(EmberClientBuilder.default[IO].build)
 
-class JettyReqsSuite extends ReqsSuite(JettyClient.resource[IO]())
+class JettyPostReqsSuite extends PostReqsSuite(JettyClient.resource[IO]())
 
-class OkHttpReqsSuite
-    extends ReqsSuite(OkHttpBuilder.withDefaultClient[IO].flatMap(_.resource))
+class OkHttpPostReqsSuite
+    extends PostReqsSuite(OkHttpBuilder.withDefaultClient[IO].flatMap(_.resource))
 
 case class TestCase(
     name: String,
@@ -42,7 +42,7 @@ case class TestCase(
     assertion: (Request[IO], Response[IO]) => IO[Unit]
 )
 
-abstract class ReqsSuite(
+abstract class PostReqsSuite(
     mkClient: Resource[IO, Client[IO]]
 ) extends CatsEffectSuite {
 
